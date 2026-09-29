@@ -105,6 +105,10 @@ h2 {
   font-size: 14px;
 }
 
+.card .links a {
+  color: var(--dim);
+}
+
 .status {
   font-family: var(--mono);
   font-size: 11px;
