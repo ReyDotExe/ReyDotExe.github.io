@@ -125,6 +125,8 @@ h2 {
 }
 
 .timeline li {
+  display: flex;
+  align-items: baseline;
   padding: 6px 0;
   border-bottom: 1px dashed var(--line);
   font-size: 14px;
@@ -135,6 +137,7 @@ h2 {
   color: var(--dim);
   display: inline-block;
   width: 56px;
+  flex-shrink: 0;
 }
 
 footer {
