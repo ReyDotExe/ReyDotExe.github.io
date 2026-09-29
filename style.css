@@ -12,6 +12,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -20,7 +24,7 @@ body {
   line-height: 1.6;
   max-width: 720px;
   margin: 0 auto;
-  padding: 48px 20px;
+  padding: 0 20px 48px;
 }
 
 a {
@@ -135,4 +139,58 @@ footer {
   color: var(--dim);
   font-family: var(--mono);
   font-size: 12px;
+}
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  margin-bottom: 40px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.topnav .brand {
+  color: var(--text);
+}
+
+.topnav .links {
+  display: flex;
+  gap: 18px;
+}
+
+.topnav .links a {
+  color: var(--dim);
+}
+
+.topnav .links a:hover {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+section {
+  scroll-margin-top: 64px;
+}
+
+.posts {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.posts li {
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.posts p {
+  margin: 4px 0 0;
+  color: var(--dim);
+  font-size: 14px;
 }
