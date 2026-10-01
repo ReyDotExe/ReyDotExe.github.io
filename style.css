@@ -148,6 +148,100 @@ a:hover {
   color: var(--a2);
 }
 
+.token {
+  position: relative;
+  border: 1px solid var(--line2);
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.token::before,
+.token::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: var(--ok);
+  border-style: solid;
+}
+
+.token::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.token::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.token .th {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--dim);
+}
+
+.token .enc {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  word-break: break-all;
+  line-height: 1.55;
+  font-size: 11px;
+  max-height: 92px;
+  overflow: hidden;
+}
+
+.enc .h {
+  color: var(--a2);
+}
+
+.enc .p {
+  color: var(--ok);
+}
+
+.enc .s {
+  color: var(--dim);
+}
+
+.token .dec {
+  padding: 12px 14px;
+  line-height: 1.8;
+  color: var(--dim);
+}
+
+.dec .key {
+  color: var(--text);
+}
+
+.dec .val {
+  color: var(--ok);
+}
+
+.dec [contenteditable] {
+  outline: none;
+  border-bottom: 1px dashed var(--faint);
+  cursor: text;
+  padding: 0 1px;
+}
+
+.dec [contenteditable]:focus {
+  border-color: var(--ok);
+  background: rgba(var(--g1), .08);
+}
+
+.token .sig {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+}
+
 .verdict {
   color: var(--faint);
 }
