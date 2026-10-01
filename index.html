@@ -14,115 +14,92 @@
 
 <div class="grain"></div>
 
-<nav class="topnav">
-  <a href="#" class="brand">rey</a>
-  <div class="links">
-    <a href="#projects">projects</a>
-    <a href="#writing">writing</a>
-    <a href="#tools">tools</a>
-    <a href="#contact">contact</a>
+<div class="wrap">
+
+  <div class="bar">
+    <a href="#" class="brand">rey</a>
+    <div class="req">
+      <span class="hide-s">GET /</span>
+      <span class="sep hide-s">·</span>
+      <span>principal: anonymous</span>
+      <span class="sep">·</span>
+      <span class="status">200 partial</span>
+    </div>
+    <span class="tick" id="tick"></span>
   </div>
-</nav>
 
-<header>
-  <img src="https://github.com/ReyDotExe.png" alt="" class="avatar">
-  <div>
-    <h1>rey</h1>
-    <p class="sub">cs @ sacramento state · security + infrastructure</p>
-  </div>
-</header>
+  <header class="hero">
+    <div>
+      <h1>rey</h1>
+      <p>cs student at sac state, focused on security and infrastructure. i build <b class="c1">security tools</b> and run <b class="c2">my own lab</b>. this page checks what you're allowed to see, and some of it is withheld on purpose.</p>
+    </div>
+  </header>
 
-<main>
+  <section class="scope">
+    <div class="scope-head"><span class="name"><i>01</i>projects:read</span><span class="verdict grant">granted</span></div>
 
-  <section>
-    <h2><span class="tag">01</span> about</h2>
-    <p>
-      i'm a cs student at sac state, working toward security.
-      i run a homelab to learn the infrastructure side: virtualization, networking,
-      and self-hosting the things i build.
-    </p>
-  </section>
-
-  <section id="projects">
-    <h2><span class="tag">02</span> projects</h2>
-
-    <div class="card">
-      <div class="card-head">
-        <h3><a href="https://github.com/ReyDotExe/scope-parity">scope-parity</a></h3>
-        <span class="status">v1.0.0</span>
+    <div class="res">
+      <div class="k"><a href="https://github.com/ReyDotExe/scope-parity">scope-parity</a></div>
+      <div class="v">
+        python tool that fails a ci build when an api route ships without a permission check, or when a permission exists that no route uses. includes a fastapi integration.
+        <div class="attrs"><span>v1.0.0</span><span>python</span><span>pypi</span></div>
       </div>
-      <p>python tool that fails the build when a route ships with no permission attached, or a permission is left with no route. runs in ci, with a fastapi adapter.</p>
-      <p class="links">
-        <a href="https://github.com/ReyDotExe/scope-parity">github</a> ·
-        <a href="https://pypi.org/project/scope-parity/">pypi</a>
-      </p>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h3>reysbot</h3>
-        <span class="status">active</span>
+    <div class="res">
+      <div class="k">reysbot</div>
+      <div class="v">
+        discord bot platform with a web admin panel. handles ticketing, moderation, and community features for a few dozen users, and manages a game server.
+        <div class="attrs"><span>active</span><span>python</span></div>
       </div>
-      <p>modular self-hosted discord bot for my server. tickets, music, moderation, an economy with a casino, and minecraft integration. runs in an lxc on my proxmox host.</p>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h3>homelab</h3>
-        <span class="status">active</span>
+    <div class="res">
+      <div class="k">homelab</div>
+      <div class="v">
+        virtualized lab on proxmox running containers and vms for self-hosted services, with network-wide dns filtering and remote access over a private vpn.
+        <div class="attrs"><span>active</span></div>
       </div>
-      <p>proxmox on a thinkcentre. vms and containers for everything i self-host, dns filtering with pi-hole, remote access over tailscale.</p>
     </div>
 
-    <div class="card">
-      <div class="card-head">
-        <h3><a href="https://vestra.ink">vestra.ink</a></h3>
-        <span class="status">live</span>
+    <div class="res">
+      <div class="k"><a href="https://vestra.ink">vestra.ink</a></div>
+      <div class="v">
+        community game server and website. players connect through a cloud proxy and an encrypted tunnel, so the home network is never exposed to the internet.
+        <div class="attrs"><span>live</span></div>
       </div>
-      <p>community server: modded minecraft, reysbot, and a browser casino. players connect through a vps proxy, so nothing at home is exposed.</p>
     </div>
   </section>
 
-  <section id="writing">
-    <h2><span class="tag">03</span> writing</h2>
-    <ul class="posts">
-      <li>
-        <a href="https://github.com/ReyDotExe/reybot-security-notes">reysbot security notes</a>
-        <p>incidents from running reysbot and the controls i added after each one.</p>
-      </li>
-    </ul>
+  <section class="scope">
+    <div class="scope-head"><span class="name"><i>02</i>writing:read</span><span class="verdict grant">granted</span></div>
+    <div class="row">
+      <div class="k"><a href="https://github.com/ReyDotExe/reybot-security-notes">security notes</a></div>
+      <div class="v">writeups of real incidents from running a self-hosted service, and the controls added after each one.</div>
+    </div>
   </section>
 
-  <section id="tools">
-    <h2><span class="tag">04</span> tools</h2>
-    <ul class="timeline">
-      <li><span class="when">lang</span> python&nbsp;· powershell&nbsp;· sql&nbsp;· javascript&nbsp;· html/css</li>
-      <li><span class="when">infra</span> proxmox&nbsp;· linux&nbsp;· systemd&nbsp;· docker&nbsp;· caddy&nbsp;· wireguard&nbsp;· tailscale</li>
-      <li><span class="when">flow</span> git&nbsp;· github actions&nbsp;· pypi</li>
-    </ul>
+  <section class="scope">
+    <div class="scope-head"><span class="name"><i>03</i>profile:read</span><span class="verdict grant">granted</span></div>
+    <div class="kv">
+      <div class="k">languages</div>
+      <div class="tools"><span>python</span><span>powershell</span><span>sql</span><span>javascript</span><span>html/css</span></div>
+      <div class="k">systems</div>
+      <div class="tools"><span>linux</span><span>proxmox</span><span>docker</span><span>networking</span><span>vpn</span></div>
+      <div class="k">tooling</div>
+      <div class="tools"><span>git</span><span>github actions</span><span>python packaging</span></div>
+      <div class="k gap">in progress</div>
+      <div class="gap">scope-parity 1.1: report a renamed permission and the route it broke as one finding</div>
+      <div class="k">in progress</div>
+      <div>network storage for the lab</div>
+      <div class="k gap">contact</div>
+      <div class="gap"><a href="https://github.com/ReyDotExe">github</a></div>
+    </div>
   </section>
 
-  <section id="now">
-    <h2><span class="tag">05</span> now</h2>
-    <ul class="posts">
-      <li>scope-parity 1.1: report a renamed scope and the route it orphaned as one finding</li>
-      <li>a nas build for the homelab</li>
-    </ul>
-  </section>
+  <div class="foot"><span>reydotexe.me</span><span>no cookies · no analytics · nothing leaves your tab</span></div>
 
-  <section id="contact">
-    <h2><span class="tag">06</span> contact</h2>
-    <p>
-      <a href="https://github.com/ReyDotExe">github</a> ·
-      <a href="https://vestra.ink">vestra.ink</a>
-    </p>
-  </section>
-
-</main>
-
-<footer>
-  <p>reydotexe.me</p>
-</footer>
+</div>
 
 </body>
 </html>
