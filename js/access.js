@@ -53,3 +53,48 @@ function countdown() {
 renderToken();
 countdown();
 setInterval(countdown, 1000);
+
+const edit = $("scopeEdit");
+let tampered = false;
+
+edit.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    edit.blur();
+  }
+});
+
+edit.addEventListener("input", () => {
+  scope = edit.textContent;
+  renderToken();
+  if (!tampered && scope !== "public:read") {
+    tampered = true;
+    $("token").classList.add("bad");
+    $("sigState").className = "verdict deny";
+    $("sigState").textContent = "invalid";
+  }
+});
+
+edit.addEventListener("blur", () => {
+  if (!tampered) return;
+  const asked = scope.trim().slice(0, 32) || "(empty)";
+  write("present", 'scope "' + asked + '"', false);
+  write("verify", "signature: mismatch", false);
+  $("barStatus").textContent = "401 invalid_token";
+  $("barStatus").classList.add("bad");
+  setTimeout(() => {
+    write("note", "editing a token doesn't grant scope. the signature covers it.");
+  }, 700);
+  setTimeout(() => {
+    scope = "public:read";
+    edit.textContent = scope;
+    tampered = false;
+    renderToken();
+    $("token").classList.remove("bad");
+    $("sigState").className = "verdict grant";
+    $("sigState").textContent = "verified";
+    $("barStatus").textContent = "200 partial";
+    $("barStatus").classList.remove("bad");
+    write("reissue", "token public:read", true);
+  }, 2600);
+});

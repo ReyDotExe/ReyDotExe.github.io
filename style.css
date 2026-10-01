@@ -100,6 +100,11 @@ a:hover {
 
 .status {
   color: var(--ok);
+  transition: color .2s;
+}
+
+.status.bad {
+  color: var(--no);
 }
 
 .tick {
@@ -187,6 +192,7 @@ a:hover {
   height: 10px;
   border-color: var(--ok);
   border-style: solid;
+  transition: border-color .3s;
 }
 
 .token::before {
@@ -199,6 +205,11 @@ a:hover {
   bottom: -1px;
   right: -1px;
   border-width: 0 1px 1px 0;
+}
+
+.token.bad::before,
+.token.bad::after {
+  border-color: var(--no);
 }
 
 .token .th {
@@ -229,6 +240,10 @@ a:hover {
 
 .enc .s {
   color: var(--dim);
+}
+
+.token.bad .enc .s {
+  color: var(--no);
 }
 
 .token .dec {
@@ -282,6 +297,10 @@ a:hover {
 
 .verdict.grant {
   color: var(--ok);
+}
+
+.verdict.deny {
+  color: var(--no);
 }
 
 .scope {
