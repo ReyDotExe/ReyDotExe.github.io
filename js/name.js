@@ -1,5 +1,7 @@
 (() => {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const css = getComputedStyle(document.documentElement);
+  const RED = css.getPropertyValue("--a2").trim() || "#cf2c40";
   const wrap = document.getElementById("namewrap"), h1 = document.getElementById("name");
   const cv = document.createElement("canvas");
   cv.className = "dotstage";
@@ -10,7 +12,16 @@
   let mx = -1e4, my = -1e4, pvx = 0, pvy = 0, lastMove = 0, lastX = null, lastY = null;
   let running = false, fresh = false, lastSy = scrollY, nlt = 0;
 
-  const WHITE = "rgb(236,236,239)";
+  function hexRgb(h) {
+    const m = h.replace("#", "");
+    return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
+  }
+  const WHITE = [236, 236, 239], REDC = hexRgb(RED.length === 7 ? RED : "#cf2c40");
+  const RAMP = [];
+  for (let i = 0; i <= 16; i++) {
+    const k = i / 16, e = k * k * (3 - 2 * k);
+    RAMP.push("rgb(" + WHITE.map((v, j) => Math.round(v + (REDC[j] - v) * e)).join(",") + ")");
+  }
 
   const font = () => {
     const cs = getComputedStyle(h1);
@@ -71,7 +82,7 @@
           next.push({
             hx: ox + lx, hy: oy + ly, lx, ly, ry: ly / h, col: xi,
             letter: lx < pad + wR - step * 0.2 ? 0 : lx < pad + wRE - step * 0.2 ? 1 : 2,
-            vx: 0, vy: 0, st: "home"
+            vx: 0, vy: 0, flash: 0, fcol: RED, st: "home"
           });
         }
       }
@@ -150,7 +161,7 @@
     const sz = step * 0.6;
     const szd = Math.max(1, Math.round(sz * dpr));
     const off = Math.floor(szd / 2);
-    const solid = [], fades = [];
+    const buckets = RAMP.map(() => []);
     let busy = false;
     for (const p of pts) {
       p.y -= dsy;
@@ -185,23 +196,42 @@
         p.y = ty;
         p.vx = p.vy = 0;
       }
-      if (age < 380 || p.vx || p.vy || p.x !== tx || p.y !== ty) busy = true;
+      if (age < 380 || p.flash > t || p.vx || p.vy || p.x !== tx || p.y !== ty) busy = true;
       if (p.y < -10 || p.y > H + 10) continue;
+      let heat = Math.min(1, disp / 22);
+      if (age < 900) heat *= age / 900;
       const X = Math.round(p.x * dpr) - off, Y = Math.round(p.y * dpr) - off;
-      const fade = age < 380 ? age / 380 : 1;
-      if (fade < 1) {
-        fades.push(X, Y, fade);
+      if (p.flash > t) {
+        (buckets.flash || (buckets.flash = [])).push(X, Y, p.fcol);
         continue;
       }
-      solid.push(X, Y);
+      const fade = age < 380 ? age / 380 : 1;
+      if (fade < 1) {
+        (buckets.fade || (buckets.fade = [])).push(X, Y, fade);
+        continue;
+      }
+      buckets[Math.round(heat * 16)].push(X, Y);
     }
-    cx.fillStyle = WHITE;
-    for (let j = 0; j < solid.length; j += 2) cx.fillRect(solid[j], solid[j + 1], szd, szd);
-    for (let j = 0; j < fades.length; j += 3) {
-      cx.globalAlpha = fades[j + 2];
-      cx.fillRect(fades[j], fades[j + 1], szd, szd);
+    for (let i = 0; i <= 16; i++) {
+      const b = buckets[i];
+      if (!b.length) continue;
+      cx.fillStyle = RAMP[i];
+      for (let j = 0; j < b.length; j += 2) cx.fillRect(b[j], b[j + 1], szd, szd);
     }
-    cx.globalAlpha = 1;
+    if (buckets.fade) {
+      cx.fillStyle = RAMP[0];
+      for (let j = 0; j < buckets.fade.length; j += 3) {
+        cx.globalAlpha = buckets.fade[j + 2];
+        cx.fillRect(buckets.fade[j], buckets.fade[j + 1], szd, szd);
+      }
+      cx.globalAlpha = 1;
+    }
+    if (buckets.flash) {
+      for (let j = 0; j < buckets.flash.length; j += 3) {
+        cx.fillStyle = buckets.flash[j + 2];
+        cx.fillRect(buckets.flash[j], buckets.flash[j + 1], szd, szd);
+      }
+    }
     if (busy || drive > 0 || dsy !== 0) {
       requestAnimationFrame(tick);
     } else {
