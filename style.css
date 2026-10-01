@@ -57,6 +57,15 @@ a:hover {
   background-size: 3px 3px;
 }
 
+.dotstage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .wrap {
   position: relative;
   z-index: 1;
@@ -154,6 +163,15 @@ a:hover {
   line-height: .86;
   font-weight: 700;
   letter-spacing: -0.015em;
+}
+
+.namewrap {
+  position: relative;
+  isolation: isolate;
+}
+
+.namewrap.fx h1 {
+  color: transparent;
 }
 
 .hero p {
