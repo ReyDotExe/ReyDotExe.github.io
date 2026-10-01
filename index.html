@@ -35,15 +35,15 @@
       <p>cs student at sac state, focused on security and infrastructure. i build <b class="c1">security tools</b> and run <b class="c2">my own lab</b>. this page checks what you're allowed to see, and some of it is withheld on purpose.</p>
     </div>
 
-    <div class="token">
-      <div class="th"><span>your token · exp 15:00</span><span>HS256</span></div>
-      <div class="enc"><span class="h">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span>.<span class="p">eyJzdWIiOiJhbm9ueW1vdXMiLCJzY29wZSI6InB1YmxpYzpyZWFkIiwiaWF0IjoxNzkwNzkwMTMzLCJleHAiOjE3OTA3OTEwMzN9</span>.<span class="s">f4Qk9Vd2sXmR7bLw1ZcNp8aTe3HuYo0G5jKq6WvBnMs</span></div>
+    <div class="token" id="token">
+      <div class="th"><span>your token · <span id="expiry">exp 15:00</span></span><span>HS256</span></div>
+      <div class="enc" id="enc"><span class="h">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span>.<span class="p">eyJzdWIiOiJhbm9ueW1vdXMiLCJzY29wZSI6InB1YmxpYzpyZWFkIiwiaWF0IjoxNzkwNzkwMTMzLCJleHAiOjE3OTA3OTEwMzN9</span>.<span class="s">f4Qk9Vd2sXmR7bLw1ZcNp8aTe3HuYo0G5jKq6WvBnMs</span></div>
       <div class="dec">
         {<br>
         &nbsp;&nbsp;<span class="key">"sub"</span>: <span class="val">"anonymous"</span>,<br>
         &nbsp;&nbsp;<span class="key">"scope"</span>: <span class="val">"<span id="scopeEdit" contenteditable="true" spellcheck="false">public:read</span>"</span>,<br>
-        &nbsp;&nbsp;<span class="key">"iat"</span>: <span class="val">1790790133</span>,<br>
-        &nbsp;&nbsp;<span class="key">"exp"</span>: <span class="val">1790791033</span><br>
+        &nbsp;&nbsp;<span class="key">"iat"</span>: <span class="val" id="iat">1790790133</span>,<br>
+        &nbsp;&nbsp;<span class="key">"exp"</span>: <span class="val" id="exp">1790791033</span><br>
         }
       </div>
       <div class="sig"><span>signature</span><span class="verdict grant">verified</span></div>
