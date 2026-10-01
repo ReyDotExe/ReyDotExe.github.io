@@ -54,6 +54,7 @@ function countdown() {
 renderToken();
 countdown();
 setInterval(countdown, 1000);
+write("issue", "token public:read", true);
 
 const edit = $("scopeEdit");
 let tampered = false;
