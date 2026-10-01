@@ -1,3 +1,4 @@
+document.documentElement.classList.add("js");
 const $ = (id) => document.getElementById(id);
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 

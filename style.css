@@ -318,13 +318,13 @@ a:hover {
   border-bottom: 1px solid var(--line);
 }
 
-.reveal {
+.js .reveal {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity .7s ease, transform .7s ease;
 }
 
-.reveal.on {
+.js .reveal.on {
   opacity: 1;
   transform: none;
 }
@@ -567,7 +567,7 @@ a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .js .reveal {
     opacity: 1;
     transform: none;
     transition: none;
