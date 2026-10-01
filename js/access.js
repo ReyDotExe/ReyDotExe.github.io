@@ -100,6 +100,32 @@ edit.addEventListener("blur", () => {
   }, 2600);
 });
 
+const glyphs = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#%&*";
+document.querySelectorAll(".redact").forEach((el) => {
+  let busy = false;
+  const probe = () => {
+    if (busy) return;
+    busy = true;
+    write("read", "withheld field", false);
+    const len = +el.dataset.len;
+    const tip = el.querySelector(".why");
+    let n = 0;
+    const iv = setInterval(() => {
+      let s = "";
+      for (let i = 0; i < len; i++) s += glyphs[Math.floor(Math.random() * glyphs.length)];
+      if (el.firstChild && el.firstChild.nodeType === 3) el.firstChild.textContent = s;
+      else el.insertBefore(document.createTextNode(s), tip);
+      if (++n > 7) {
+        clearInterval(iv);
+        el.firstChild.textContent = "";
+        setTimeout(() => (busy = false), 1200);
+      }
+    }, 45);
+  };
+  el.addEventListener("mouseenter", probe);
+  el.addEventListener("focus", probe);
+});
+
 document.querySelectorAll(".res").forEach((r) => {
   const btn = r.querySelector("button");
   btn.addEventListener("click", (e) => {

@@ -478,6 +478,9 @@ a:hover {
   font-family: var(--mono);
   font-size: .9em;
   line-height: 1.1em;
+  color: var(--no);
+  white-space: nowrap;
+  text-align: left;
 }
 
 .redact[data-len="7"] {
@@ -501,6 +504,7 @@ a:hover {
   color: var(--no);
   background: var(--bg);
   border: 1px solid var(--line2);
+  white-space: normal;
   opacity: 0;
   pointer-events: none;
   transition: opacity .2s;
