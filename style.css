@@ -111,6 +111,29 @@ a:hover {
   text-align: right;
 }
 
+.tick .a {
+  color: var(--dim);
+}
+
+.tick .ok {
+  color: var(--ok);
+}
+
+.tick .no {
+  color: var(--no);
+}
+
+.tick.flash {
+  animation: in .35s ease-out;
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
 .hero {
   display: grid;
   grid-template-columns: 1fr 380px;
