@@ -349,11 +349,23 @@ a:hover {
 }
 
 .res {
+  border-top: 1px solid var(--line);
+}
+
+.res > button {
+  all: unset;
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 220px 1fr 24px;
   gap: 6px 28px;
+  width: 100%;
   padding: 20px 0;
-  border-top: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.res > button:focus-visible {
+  outline: 1px solid var(--ok);
+  outline-offset: 4px;
 }
 
 .res .k,
@@ -363,12 +375,15 @@ a:hover {
   letter-spacing: -0.02em;
 }
 
-.res .k a,
+.res .k {
+  transition: color .2s;
+}
+
 .row .k a {
   border: 0;
 }
 
-.res .k a:hover,
+.res > button:hover .k,
 .row .k a:hover {
   color: var(--a2);
 }
@@ -379,6 +394,18 @@ a:hover {
   font-size: 15px;
 }
 
+.res .plus {
+  font-family: var(--mono);
+  color: var(--faint);
+  text-align: right;
+  transition: transform .3s, color .2s;
+}
+
+.res.open .plus {
+  transform: rotate(45deg);
+  color: var(--ok);
+}
+
 .attrs {
   display: flex;
   flex-wrap: wrap;
@@ -387,6 +414,56 @@ a:hover {
   font-family: var(--mono);
   font-size: 11.5px;
   color: var(--faint);
+}
+
+.detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows .4s ease, visibility .4s;
+}
+
+.res.open .detail {
+  grid-template-rows: 1fr;
+  visibility: visible;
+}
+
+.detail > div {
+  overflow: hidden;
+}
+
+.detail .inner {
+  margin: 0 0 22px 248px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--dim);
+}
+
+.detail .inner b {
+  font-weight: 400;
+  color: var(--text);
+}
+
+.detail .inner .e {
+  color: var(--no);
+}
+
+.detail .inner .w {
+  color: #d9c38a;
+}
+
+.detail .links {
+  margin-top: 10px;
+  display: flex;
+  gap: 16px;
+}
+
+.detail .links a {
+  color: var(--text);
 }
 
 .redact {
@@ -524,12 +601,20 @@ a:hover {
     display: none;
   }
 
-  .res {
+  .res > button {
     grid-template-columns: 1fr 24px;
   }
 
   .res .v {
     grid-column: 1 / -1;
+  }
+
+  .res .k {
+    grid-row: 1;
+  }
+
+  .detail .inner {
+    margin-left: 0;
   }
 
   .kv,

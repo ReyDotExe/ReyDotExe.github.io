@@ -53,36 +53,72 @@
   <section class="scope reveal" data-scope="projects:read" data-verdict="grant">
     <div class="scope-head"><span class="name"><i>01</i>projects:read</span><span class="verdict">pending</span></div>
 
-    <div class="res">
-      <div class="k"><a href="https://github.com/ReyDotExe/scope-parity">scope-parity</a></div>
-      <div class="v">
-        python tool that fails a ci build when an api route ships without a permission check, or when a permission exists that no route uses. includes a fastapi integration.
-        <div class="attrs"><span>v1.0.0</span><span>python</span><span>pypi</span></div>
-      </div>
+    <div class="res" data-res="scope-parity">
+      <button type="button" aria-expanded="false">
+        <span class="k">scope-parity</span>
+        <span class="v">python tool that fails a ci build when an api route ships without a permission check, or when a permission exists that no route uses. includes a fastapi integration.
+          <span class="attrs"><span>v1.0.0</span><span>python</span><span>pypi</span></span>
+        </span>
+        <span class="plus">+</span>
+      </button>
+      <div class="detail"><div><div class="inner">
+        <b>example output</b><br>
+        <span class="e">error</span>&nbsp;&nbsp; route-unprotected&nbsp;&nbsp; DELETE /orders/{id} declares no scope<br>
+        <span class="e">error</span>&nbsp;&nbsp; route-unknown-scope POST /orders declares "orders:write"<br>
+        <span class="w">warning</span> scope-unused&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; orders:create is declared by no route<br>
+        exit 1
+        <div class="links"><a href="https://github.com/ReyDotExe/scope-parity">github</a><a href="https://pypi.org/project/scope-parity/">pypi</a></div>
+      </div></div></div>
     </div>
 
-    <div class="res">
-      <div class="k">reysbot</div>
-      <div class="v">
-        discord bot platform with a web admin panel. handles ticketing, moderation, and community features for a few dozen users, and manages a game server.
-        <div class="attrs"><span>active</span><span>python</span><span>source <span class="redact" data-len="7" tabindex="0"><span class="why">private: holds live config</span></span></span></div>
-      </div>
+    <div class="res" data-res="reysbot">
+      <button type="button" aria-expanded="false">
+        <span class="k">reysbot</span>
+        <span class="v">discord bot platform with a web admin panel. handles ticketing, moderation, and community features for a few dozen users, and manages a game server.
+          <span class="attrs"><span>active</span><span>python</span><span>source <span class="redact" data-len="7" tabindex="0"><span class="why">private: holds live config</span></span></span></span>
+        </span>
+        <span class="plus">+</span>
+      </button>
+      <div class="detail"><div><div class="inner">
+        <b>runtime</b>&nbsp;&nbsp; python, sqlite, linux container on proxmox<br>
+        <b>features</b>&nbsp; ticketing · moderation · automod · music · stream alerts · game server control<br>
+        <b>security</b>&nbsp; individual staff accounts with 2fa · scoped api keys · confirmation on destructive actions<br>
+        <b>exposure</b>&nbsp; admin panel reachable only through an authenticated tunnel
+        <div class="links"><a href="https://github.com/ReyDotExe/reybot-security-notes">security notes</a></div>
+      </div></div></div>
     </div>
 
-    <div class="res">
-      <div class="k">homelab</div>
-      <div class="v">
-        virtualized lab on proxmox running containers and vms for self-hosted services, with network-wide dns filtering and remote access over a private vpn.
-        <div class="attrs"><span>active</span><span>topology <span class="redact" data-len="9" tabindex="0"><span class="why">withheld: internal addressing</span></span></span></div>
-      </div>
+    <div class="res" data-res="homelab">
+      <button type="button" aria-expanded="false">
+        <span class="k">homelab</span>
+        <span class="v">virtualized lab on proxmox running containers and vms for self-hosted services, with network-wide dns filtering and remote access over a private vpn.
+          <span class="attrs"><span>active</span><span>topology <span class="redact" data-len="9" tabindex="0"><span class="why">withheld: internal addressing</span></span></span></span>
+        </span>
+        <span class="plus">+</span>
+      </button>
+      <div class="detail"><div><div class="inner">
+        <b>hypervisor</b> proxmox ve, single node<br>
+        <b>dns</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pi-hole<br>
+        <b>remote</b>&nbsp;&nbsp;&nbsp;&nbsp; tailscale, no inbound ports open<br>
+        <b>backups</b>&nbsp;&nbsp;&nbsp; nightly snapshots of every guest<br>
+        <b>next</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; network storage
+      </div></div></div>
     </div>
 
-    <div class="res">
-      <div class="k"><a href="https://vestra.ink">vestra.ink</a></div>
-      <div class="v">
-        community game server and website. players connect through a cloud proxy and an encrypted tunnel, so the home network is never exposed to the internet.
-        <div class="attrs"><span>live</span></div>
-      </div>
+    <div class="res" data-res="vestra.ink">
+      <button type="button" aria-expanded="false">
+        <span class="k">vestra.ink</span>
+        <span class="v">community game server and website. players connect through a cloud proxy and an encrypted tunnel, so the home network is never exposed to the internet.
+          <span class="attrs"><span>live</span></span>
+        </span>
+        <span class="plus">+</span>
+      </button>
+      <div class="detail"><div><div class="inner">
+        <b>path</b>&nbsp;&nbsp;&nbsp;&nbsp; player → cloud proxy → wireguard tunnel → home vm<br>
+        <b>web app</b>&nbsp; separate service with a single scoped api key back to the bot<br>
+        <b>access</b>&nbsp;&nbsp; whitelisted
+        <div class="links"><a href="https://vestra.ink">visit</a></div>
+      </div></div></div>
     </div>
   </section>
 

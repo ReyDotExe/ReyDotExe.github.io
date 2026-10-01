@@ -100,6 +100,17 @@ edit.addEventListener("blur", () => {
   }, 2600);
 });
 
+document.querySelectorAll(".res").forEach((r) => {
+  const btn = r.querySelector("button");
+  btn.addEventListener("click", (e) => {
+    if (e.target.closest(".redact")) return;
+    const open = r.classList.toggle("open");
+    setTimeout(() => window.dispatchEvent(new Event("remeasure")), 450);
+    btn.setAttribute("aria-expanded", open);
+    if (open) write("read", "resource " + r.dataset.res, true);
+  });
+});
+
 const seen = new Set();
 const io = new IntersectionObserver((entries) => {
   entries.forEach((e) => {
