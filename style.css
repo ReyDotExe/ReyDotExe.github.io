@@ -303,9 +303,30 @@ a:hover {
   color: var(--no);
 }
 
+.verdict.eval::before {
+  animation: pulse .5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  to {
+    opacity: .2;
+  }
+}
+
 .scope {
   padding: 56px 0 16px;
   border-bottom: 1px solid var(--line);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .7s ease, transform .7s ease;
+}
+
+.reveal.on {
+  opacity: 1;
+  transform: none;
 }
 
 .scope-head {
@@ -461,6 +482,19 @@ a:hover {
   font-family: var(--mono);
   font-size: 11.5px;
   color: var(--faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .tick.flash,
+  .verdict.eval::before {
+    animation: none;
+  }
 }
 
 @media (max-width: 900px) {

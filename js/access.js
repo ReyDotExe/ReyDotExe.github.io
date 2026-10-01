@@ -1,4 +1,5 @@
 const $ = (id) => document.getElementById(id);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function write(action, target, ok) {
   const tk = $("tick");
@@ -98,3 +99,25 @@ edit.addEventListener("blur", () => {
     write("reissue", "token public:read", true);
   }, 2600);
 });
+
+const seen = new Set();
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target;
+    el.classList.add("on");
+    const sc = el.dataset.scope;
+    if (!sc || seen.has(sc)) return;
+    seen.add(sc);
+    const v = el.querySelector(".verdict");
+    const ok = el.dataset.verdict === "grant";
+    v.className = "verdict eval";
+    v.textContent = "evaluating";
+    setTimeout(() => {
+      v.className = "verdict " + (ok ? "grant" : "deny");
+      v.textContent = ok ? "granted" : "denied";
+      write("read", sc, ok);
+    }, reduce ? 0 : 520);
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
