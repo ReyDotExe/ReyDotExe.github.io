@@ -618,6 +618,11 @@ a:hover {
     grid-row: 1;
   }
 
+  .res .plus {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
   .detail .inner {
     margin-left: 0;
   }
