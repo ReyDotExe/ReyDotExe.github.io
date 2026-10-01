@@ -232,6 +232,51 @@ a:hover {
   color: var(--faint);
 }
 
+.redact {
+  display: inline-block;
+  position: relative;
+  height: 1.1em;
+  vertical-align: -0.18em;
+  background: var(--bar);
+  background-image: repeating-linear-gradient(135deg, transparent 0 5px, #1e1e23 5px 6px);
+  border-radius: 2px;
+  cursor: help;
+  font-family: var(--mono);
+  font-size: .9em;
+  line-height: 1.1em;
+}
+
+.redact[data-len="7"] {
+  width: 7ch;
+}
+
+.redact[data-len="9"] {
+  width: 9ch;
+}
+
+.redact .why {
+  position: absolute;
+  left: 0;
+  top: 140%;
+  z-index: 5;
+  width: max-content;
+  max-width: 60vw;
+  padding: 3px 8px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--no);
+  background: var(--bg);
+  border: 1px solid var(--line2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+
+.redact:hover .why,
+.redact:focus .why {
+  opacity: 1;
+}
+
 .kv {
   display: grid;
   grid-template-columns: 220px 1fr;
