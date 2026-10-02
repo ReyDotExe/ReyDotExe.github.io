@@ -63,7 +63,8 @@
         const id = f.key + "|" + f.ls + "|" + w.toFixed(2);
         let cand = sets.get(id);
         if (!cand) {
-          cand = f.ws.map(([s, a]) => [s, (w - a - 0.05).toFixed(3) + "px", Math.abs(a + f.ls - w)]).sort((p, q) => p[2] - q[2]).slice(0, 5);
+          const all = f.ws.map(([s, a]) => [s, (w - a - 0.05).toFixed(3) + "px", Math.abs(a + f.ls - w)]).sort((p, q) => p[2] - q[2]);
+          cand = all.filter((k) => k[2] <= all[4][2] + 0.01);
           sets.set(id, cand);
         }
         c.cand = cand;
