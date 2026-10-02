@@ -302,3 +302,106 @@
   });
   wake();
 })();
+
+(() => {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(pointer: fine)").matches) return;
+  const SYM = "&()*@#%$!?<>/\\{}[]^~=+";
+  const css = getComputedStyle(document.documentElement);
+  const hexRgb = (h, f) => {
+    const m = (h.trim().length === 7 ? h.trim() : f).replace("#", "");
+    return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
+  };
+  const RED = hexRgb(css.getPropertyValue("--a2"), "#cf2c40"), DEEP = hexRgb(css.getPropertyValue("--f2"), "#8f1424"), CHROME = [226, 228, 234];
+  const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
+  const rgba = (c, a) => "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")";
+  const cv = document.createElement("canvas");
+  cv.className = "trail";
+  document.body.appendChild(cv);
+  const cx = cv.getContext("2d");
+  let W = 0, H = 0, dpr = 1;
+  function size() {
+    dpr = Math.min(2, devicePixelRatio || 1);
+    W = innerWidth;
+    H = innerHeight;
+    cv.width = Math.round(W * dpr);
+    cv.height = Math.round(H * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx.textBaseline = "middle";
+    cx.textAlign = "center";
+  }
+  size();
+  addEventListener("resize", size);
+
+  const parts = [];
+  let mx = -999, my = -999, lx = -999, ly = -999, has = false, acc = 0, running = false, lt = 0;
+  function wake() {
+    if (running) return;
+    running = true;
+    lt = performance.now();
+    requestAnimationFrame(frame);
+  }
+  addEventListener("pointermove", (e) => {
+    mx = e.clientX;
+    my = e.clientY;
+    if (!has) {
+      lx = mx;
+      ly = my;
+      has = true;
+    }
+    wake();
+  }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", () => {
+    has = false;
+    acc = 0;
+  });
+
+  function frame(t) {
+    const dt = Math.min(0.05, Math.max(0, (t - lt) / 1000));
+    lt = t;
+    if (has) {
+      acc += Math.hypot(mx - lx, my - ly);
+      const steps = Math.floor(acc / 13);
+      for (let i = 0; i < steps; i++) {
+        const k = (i + 1) / steps;
+        parts.push({
+          x: lx + (mx - lx) * k,
+          y: ly + (my - ly) * k,
+          ch: SYM[Math.floor(Math.random() * SYM.length)],
+          life: 1,
+          sz: 11 + Math.random() * 5,
+          drift: (Math.random() - 0.5) * 14
+        });
+      }
+      acc -= steps * 13;
+      lx = mx;
+      ly = my;
+    }
+    cx.clearRect(0, 0, W, H);
+    let font = "";
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      p.life -= dt * 0.9;
+      if (p.life <= 0) {
+        parts.splice(i, 1);
+        continue;
+      }
+      if (Math.random() < 0.18) p.ch = SYM[Math.floor(Math.random() * SYM.length)];
+      p.y -= 8 * dt;
+      p.x += p.drift * dt;
+      const k = 1 - p.life;
+      const c = k < 0.25 ? mix(CHROME, RED, k / 0.25) : mix(RED, DEEP, (k - 0.25) / 0.75);
+      cx.fillStyle = rgba(c, p.life);
+      const f = "500 " + p.sz.toFixed(0) + "px 'Geist Mono', monospace";
+      if (f !== font) {
+        cx.font = f;
+        font = f;
+      }
+      cx.fillText(p.ch, p.x, p.y);
+    }
+    if (parts.length) {
+      requestAnimationFrame(frame);
+    } else {
+      running = false;
+    }
+  }
+})();
