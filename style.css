@@ -600,6 +600,36 @@ a:hover {
   color: var(--faint);
 }
 
+.fb {
+  transition: opacity .6s ease;
+}
+
+.fb.unfocus .ch {
+  opacity: .42;
+}
+
+.fb.unfocus .ch.hot {
+  opacity: 1;
+}
+
+.ch {
+  transition: color .25s ease;
+}
+
+.ch.hot {
+  color: var(--a2);
+  transition: none;
+}
+
+.sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .js .reveal {
     opacity: 1;
