@@ -132,7 +132,7 @@
   const KICK = (s, bar) => s === 0 || s === 10 || (bar % 2 === 1 && s === 7);
   const SNARE = (s) => s === 8;
   const HAT = (s) => s % 2 === 0;
-  let step = 0, next = 0, timer = 0, stopTimer = 0;
+  let step = 0, next = 0, t0 = 0, timer = 0, stopTimer = 0, labelWait = 0, applied = -1;
 
   function schedule() {
     const now = A.ctx.currentTime;
@@ -162,9 +162,42 @@
     }
   }
 
+  const tracks = new Map();
+  function valueAt(tr, t) {
+    let v = tr[0].v;
+    for (let i = 1; i < tr.length; i++) {
+      const a = tr[i - 1], b = tr[i];
+      if (t >= b.t) {
+        v = b.v;
+        continue;
+      }
+      if (t > a.t) {
+        const k = (t - a.t) / (b.t - a.t);
+        v = b.e ? a.v * Math.pow(b.v / a.v, k) : a.v + (b.v - a.v) * k;
+      }
+      break;
+    }
+    return v;
+  }
   function hold(p, v) {
     p.cancelScheduledValues(0);
     p.setValueAtTime(v, A.ctx.currentTime);
+    tracks.set(p, [{ t: 0, v }]);
+  }
+  function sweep(p, to, t, dur, e) {
+    const now = A.ctx.currentTime;
+    const tr = tracks.get(p) || [{ t: 0, v: p.value }];
+    const v = valueAt(tr, t);
+    const span = tr.find((q) => q.t >= t);
+    const keep = tr.filter((q) => q.t < t + 0.001);
+    const past = keep.filter((q) => q.t <= now);
+    p.cancelScheduledValues(t + 0.001);
+    if (span && span.e) p.exponentialRampToValueAtTime(v, t);
+    else p.linearRampToValueAtTime(v, t);
+    if (e) p.exponentialRampToValueAtTime(to, t + dur);
+    else p.linearRampToValueAtTime(to, t + dur);
+    const pts = [past.length ? past[past.length - 1] : keep[0], ...keep.filter((q) => q.t > now), { t, v, e: span && span.e }, { t: t + dur, v: to, e }];
+    tracks.set(p, pts.sort((a, b) => a.t - b.t));
   }
 
   function start() {
@@ -172,13 +205,20 @@
     A.mute.gain.setTargetAtTime(1, A.ctx.currentTime, 0.15);
     clearTimeout(stopTimer);
     stopTimer = 0;
-    if (A.playing) return;
+    if (A.playing) {
+      if (applied !== cur) applySection(cur);
+      return;
+    }
     A.playing = true;
     step = 0;
     next = A.ctx.currentTime + 0.08;
+    t0 = next;
     const sec = SECTIONS[cur];
     LAYERS.forEach((k) => hold(A.L[k].gain, sec.on.includes(k) ? 1 : 0));
     hold(A.lp.frequency, sec.lp);
+    applied = cur;
+    clearTimeout(labelWait);
+    setLabel(sec.name);
     timer = setInterval(schedule, 25);
   }
   function stop() {
@@ -193,7 +233,35 @@
     }, 500);
   }
 
-  const cur = 0;
+  function nextBar() {
+    return t0 + Math.ceil((A.ctx.currentTime - t0 + 0.05) / BAR) * BAR;
+  }
+  function applySection(i) {
+    const sec = SECTIONS[i];
+    const t = nextBar();
+    LAYERS.forEach((k) => sweep(A.L[k].gain, sec.on.includes(k) ? 1 : 0, t, BAR));
+    sweep(A.lp.frequency, sec.lp, t, BAR, true);
+    applied = i;
+    clearTimeout(labelWait);
+    labelWait = setTimeout(() => setLabel(sec.name), Math.max(0, (t - A.ctx.currentTime) * 1000));
+  }
+
+  const zones = [document.querySelector(".hero"), ...document.querySelectorAll(".scope")].slice(0, SECTIONS.length);
+  function which() {
+    if (scrollY > 0 && scrollY + innerHeight >= document.documentElement.scrollHeight - 40) return zones.length - 1;
+    const mid = innerHeight * 0.5;
+    let best = 0, bd = 1e9;
+    zones.forEach((z, i) => {
+      const r = z.getBoundingClientRect();
+      const d = mid < r.top ? r.top - mid : mid > r.bottom ? mid - r.bottom : 0;
+      if (d < bd) {
+        bd = d;
+        best = i;
+      }
+    });
+    return best;
+  }
+  let cur = which();
 
   const bar = document.querySelector(".bar"), tick = document.getElementById("tick");
   const np = document.createElement("span");
@@ -208,6 +276,16 @@
   bar.insertBefore(np, tick);
   bar.insertBefore(btn, tick);
 
+  let swapT = 0;
+  function setLabel(n) {
+    if (label.textContent === n && !label.classList.contains("swap")) return;
+    label.classList.add("swap");
+    clearTimeout(swapT);
+    swapT = setTimeout(() => {
+      label.textContent = n;
+      label.classList.remove("swap");
+    }, 180);
+  }
   window.addEventListener("beat16", (e) => {
     if (e.detail % 4) return;
     const q = (e.detail / 4) % 4;
@@ -229,5 +307,19 @@
     if (!A.ctx) return;
     if (document.hidden) A.ctx.suspend();
     else if (A.on) A.ctx.resume();
+  });
+
+  function watch() {
+    const w = which();
+    if (w === cur) return;
+    cur = w;
+    if (A.on && A.playing) applySection(cur);
+    else setLabel(SECTIONS[cur].name);
+  }
+  addEventListener("scroll", watch, { passive: true });
+  addEventListener("resize", watch);
+  addEventListener("remeasure", watch);
+  addEventListener("transitionend", (e) => {
+    if (e.target.classList && e.target.classList.contains("reveal")) watch();
   });
 })();
