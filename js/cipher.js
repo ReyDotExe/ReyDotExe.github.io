@@ -1,9 +1,11 @@
 (() => {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const SYM = "&()*@#%$!?<>/\\{}[]^~=+";
+  const fine = matchMedia("(pointer: fine)").matches;
+  const LENS = 78, RIM = 26;
   const barEl = document.querySelector(".bar");
   const probe = document.createElement("canvas").getContext("2d");
-  let poked = false;
+  let lx = -1e4, ly = -1e4, lensOn = false, poked = false, lensHits = 0;
   let running = false, lt = 0, fl = 0, psy = -1, lastW = innerWidth;
 
   const blocks = [...document.querySelectorAll(".hero p, .scope-head, .res, .row, .kv > div")];
@@ -18,6 +20,7 @@
     nodes.forEach((n) => {
       const pt = n.textContent;
       const fe = n.parentElement;
+      const pan = !!fe.closest(".detail");
       const vis = document.createElement("span");
       vis.setAttribute("aria-hidden", "true");
       for (const ch of pt) {
@@ -26,7 +29,7 @@
         c.textContent = ch;
         vis.appendChild(c);
         const blank = ch === " " || ch === "\n" || ch === " ";
-        chars.push({ el: c, fe, pt: ch, noise: ch, nls: "", cand: null, blank, enc: 0, shown: ch, ls: "", cls: "", hot: 0 });
+        chars.push({ el: c, fe, pt: ch, noise: ch, nls: "", cand: null, blank, pan, enc: 0, shown: ch, ls: "", cls: "", hot: 0, x: 0, y: 0 });
       }
       const sr = document.createElement("span");
       sr.className = "sr";
@@ -34,7 +37,7 @@
       n.replaceWith(vis, sr);
     });
     const det = el.querySelector(".detail");
-    return { el, chars, det, inner: det && det.querySelector(".inner"), total: chars.filter((c) => !c.blank).length, count: 0, acc: 0, dirty: false, warm: false, unf: false };
+    return { el, chars, det, inner: det && det.querySelector(".inner"), total: chars.filter((c) => !c.blank).length, count: 0, acc: 0, dirty: false, warm: false, near: false, unf: false };
   });
 
   function pick(c) {
@@ -69,6 +72,16 @@
     }
   }
 
+  function measure(d, br = d.el.getBoundingClientRect(), w = d.el.offsetWidth) {
+    const sc = br.width / (w || 1) || 1;
+    for (const c of d.chars) {
+      if (c.blank) continue;
+      const r = c.el.getBoundingClientRect();
+      c.x = (r.left + r.width / 2 - br.left) / sc;
+      c.y = (r.top + r.height / 2 - br.top) / sc;
+    }
+  }
+
   function lock() {
     for (const d of data) {
       d.el.style.minHeight = "";
@@ -91,6 +104,7 @@
       if (d.inner) d.inner.style.minHeight = hs[i][1] + "px";
     });
     fit();
+    if (fine) data.forEach((d) => measure(d));
   }
 
   function wake() {
@@ -110,10 +124,16 @@
     const top = barEl.getBoundingClientRect().bottom + vh * 0.14;
     const end = sy + vh >= document.documentElement.scrollHeight - 40 ? vh : vh * 0.86;
     const rects = data.map((d) => d.el.getBoundingClientRect());
+    const widths = data.map((d) => d.el.offsetWidth);
     const moved = poked || sy !== psy;
     poked = false;
     psy = sy;
-    let busy = false;
+    const nears = data.map((d, i) => {
+      const br = rects[i];
+      return lensOn && d.count > 0 && br.bottom > -200 && br.top < vh + 200 && lx > br.left - LENS - RIM && lx < br.right + LENS + RIM && ly > br.top - LENS - RIM && ly < br.bottom + LENS + RIM;
+    });
+    if (moved) data.forEach((d, i) => nears[i] && measure(d, rects[i], widths[i]));
+    let busy = false, hits = 0;
     data.forEach((d, i) => {
       const br = rects[i];
       const n = d.chars.length;
@@ -163,14 +183,33 @@
       } else {
         d.acc = 0;
       }
-      if (!d.dirty && !d.warm) return;
+      const sc = br.width / (widths[i] || 1) || 1;
+      const near = nears[i];
+      if (!d.dirty && !d.warm && !(near && moved) && near === d.near) return;
+      d.near = near;
       d.warm = false;
       d.dirty = false;
+      const open = !d.det || d.el.classList.contains("open");
       for (const c of d.chars) {
         if (c.blank) continue;
         if (flick && c.enc && Math.random() < 0.06) pick(c);
-        const ch = c.enc ? c.noise : c.pt;
-        let cls = "";
+        let dist = 1e9;
+        if (near && (open || !c.pan)) dist = Math.hypot(br.left + c.x * sc - lx, br.top + c.y * sc - ly);
+        let ch, cls = "";
+        if (c.enc) {
+          if (dist < LENS) {
+            ch = c.pt;
+            cls = "lit";
+            hits++;
+          } else if (dist < LENS + RIM) {
+            ch = c.noise;
+            cls = "rim";
+          } else {
+            ch = c.noise;
+          }
+        } else {
+          ch = c.pt;
+        }
         if (t - c.hot < 260) {
           cls = "hot";
           d.warm = true;
@@ -191,6 +230,10 @@
       }
       if (d.warm) busy = true;
     });
+    if (fine && moved) {
+      if (hits > 0 && lensHits === 0 && typeof write === "function") write("decrypt", "lens", true);
+      lensHits = hits;
+    }
     if (busy || moved) {
       requestAnimationFrame(loop);
     } else {
@@ -211,11 +254,25 @@
     d.el.classList.add("unfocus");
   });
 
+  addEventListener("pointermove", (e) => {
+    if (!fine) return;
+    lx = e.clientX;
+    ly = e.clientY;
+    lensOn = true;
+    poked = true;
+    wake();
+  }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", () => {
+    lensOn = false;
+    poked = true;
+    wake();
+  });
   addEventListener("scroll", wake, { passive: true });
   addEventListener("transitionend", (e) => {
     if (e.target.matches && e.target.matches(".reveal, .detail")) wake();
   });
   addEventListener("remeasure", () => {
+    if (fine) data.forEach((d) => measure(d));
     poked = true;
     wake();
   });

@@ -608,12 +608,23 @@ a:hover {
   opacity: .42;
 }
 
+.fb.unfocus .ch.lit,
+.fb.unfocus .ch.rim,
 .fb.unfocus .ch.hot {
   opacity: 1;
 }
 
 .ch {
   transition: color .25s ease;
+}
+
+.ch.lit {
+  color: #f4f4f7;
+  text-shadow: 0 0 12px rgba(207, 44, 64, .35);
+}
+
+.ch.rim {
+  color: var(--a2);
 }
 
 .ch.hot {
