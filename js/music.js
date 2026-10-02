@@ -194,4 +194,40 @@
   }
 
   const cur = 0;
+
+  const bar = document.querySelector(".bar"), tick = document.getElementById("tick");
+  const np = document.createElement("span");
+  np.className = "np";
+  const lights = [0, 1, 2, 3].map(() => np.appendChild(document.createElement("i")));
+  const label = np.appendChild(document.createElement("em"));
+  label.textContent = SECTIONS[cur].name;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "snd";
+  btn.textContent = "sound: off";
+  bar.insertBefore(np, tick);
+  bar.insertBefore(btn, tick);
+
+  window.addEventListener("beat16", (e) => {
+    if (e.detail % 4) return;
+    const q = (e.detail / 4) % 4;
+    lights.forEach((l, i) => l.classList.toggle("on", i === q));
+  });
+
+  function setSound(on) {
+    if (on === A.on) return;
+    A.on = on;
+    btn.textContent = on ? "sound: on" : "sound: off";
+    btn.classList.toggle("on", on);
+    np.classList.toggle("live", on);
+    if (on) start();
+    else stop();
+    if (typeof write === "function") write(on ? "play" : "stop", SECTIONS[cur].name, true);
+  }
+  btn.addEventListener("click", () => setSound(!A.on));
+  document.addEventListener("visibilitychange", () => {
+    if (!A.ctx) return;
+    if (document.hidden) A.ctx.suspend();
+    else if (A.on) A.ctx.resume();
+  });
 })();

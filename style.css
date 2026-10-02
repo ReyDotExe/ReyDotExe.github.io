@@ -126,6 +126,7 @@ a:hover {
   display: flex;
   gap: 14px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .bar .req .sep {
@@ -142,6 +143,7 @@ a:hover {
 }
 
 .tick {
+  flex: 0 1 380px;
   max-width: 380px;
   white-space: nowrap;
   overflow: hidden;
@@ -171,6 +173,71 @@ a:hover {
     opacity: 0;
     transform: translateY(4px);
   }
+}
+
+.np {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 14px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--faint);
+}
+
+.np i {
+  width: 5px;
+  height: 5px;
+  background: var(--line2);
+  transition: background .06s;
+}
+
+.np.live i.on {
+  background: var(--a2);
+}
+
+.np em {
+  font-style: normal;
+  margin-left: 6px;
+  min-width: 64px;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.np em.swap {
+  opacity: 0;
+  transform: translateY(-3px);
+}
+
+.np.live em {
+  color: var(--text);
+}
+
+.snd {
+  all: unset;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--dim);
+  border: 1px solid var(--line2);
+  padding: 2px 8px;
+  margin-left: 12px;
+  min-width: 10ch;
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color .2s, border-color .2s;
+}
+
+.snd:hover,
+.snd.on {
+  color: var(--a2);
+  border-color: var(--a2);
+}
+
+.snd:focus-visible {
+  outline: 1px solid var(--a2);
+  outline-offset: 2px;
 }
 
 .hero {
@@ -687,8 +754,14 @@ a:hover {
     padding: 14px 18px;
   }
 
-  .bar .req {
+  .bar .req,
+  .np em {
     display: none;
+  }
+
+  .snd {
+    margin: -4px 0;
+    padding: 6px 10px;
   }
 
   .res > button {

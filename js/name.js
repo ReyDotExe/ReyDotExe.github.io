@@ -249,7 +249,8 @@
       wake();
     }, 120);
   });
-  document.fonts.load(font(), "rey").catch(() => {}).then(() => document.fonts.ready).then(() => {
+  const parsed = new Promise((r) => document.addEventListener("DOMContentLoaded", r, { once: true }));
+  Promise.all([document.fonts.load(font(), "rey").catch(() => {}), parsed]).then(() => document.fonts.ready).then(() => {
     build(true);
     wrap.classList.add("fx");
     built = true;
