@@ -611,6 +611,7 @@ a:hover {
 
 .fb {
   transition: opacity .6s ease;
+  overflow-anchor: none;
 }
 
 .fb.unfocus .ch {
