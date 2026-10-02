@@ -142,6 +142,7 @@
   addEventListener("scroll", wake, { passive: true });
   addEventListener("pointerdown", wake, { passive: true });
   addEventListener("keydown", wake);
+  addEventListener("burst", wake);
 
   function tick(t) {
     const dt = fresh ? 1 : Math.min(2, (t - nlt) / 16.67);

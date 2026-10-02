@@ -1,6 +1,7 @@
 (() => {
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
+  const RED = getComputedStyle(document.documentElement).getPropertyValue("--a2").trim() || "#cf2c40";
   const A = { ctx: null, on: false, playing: false, out: null, lp: null, mute: null, fx: null, noise: null, L: {} };
   const LAYERS = ["pad", "hat", "mel", "kick", "bass", "snare", "roll", "mel2"];
   const SECTIONS = [
@@ -321,5 +322,110 @@
   addEventListener("remeasure", watch);
   addEventListener("transitionend", (e) => {
     if (e.target.classList && e.target.classList.contains("reveal")) watch();
+  });
+
+  const hint = document.createElement("div");
+  hint.className = "padhint";
+  hint.innerHTML = "tap <b>r</b> <b>e</b> <b>y</b>" + (matchMedia("(pointer: fine)").matches ? " or press the keys" : "");
+  document.getElementById("namewrap").after(hint);
+  const caps = hint.querySelectorAll("b"), capT = [0, 0, 0];
+  const oneShots = [(t) => kick(t, A.fx), (t) => snare(t, A.fx), (t) => {
+    hat(t, true, A.fx);
+    hat(t + 0.07, false, A.fx);
+  }];
+
+  function burst(k) {
+    const D = window.DOTS;
+    if (D) {
+      const mine = D.pts.filter((p) => p.letter === k && p.st === "home");
+      let sx = 0, sy = 0;
+      mine.forEach((p) => {
+        sx += p.x;
+        sy += p.y;
+      });
+      sx /= mine.length || 1;
+      sy /= mine.length || 1;
+      const tt = performance.now();
+      mine.forEach((p) => {
+        const dx = p.x - sx, dy = p.y - sy, d = Math.hypot(dx, dy) || 1;
+        const f = 3 + Math.random() * 3;
+        p.vx += (dx / d) * f;
+        p.vy += (dy / d) * f;
+        p.flash = tt + 220;
+        p.fcol = RED;
+      });
+      if (mine.length) window.dispatchEvent(new Event("burst"));
+    }
+    const b = caps[k];
+    b.classList.add("hit");
+    clearTimeout(capT[k]);
+    capT[k] = setTimeout(() => b.classList.remove("hit"), 140);
+  }
+  function padHit(k) {
+    if (!A.on) setSound(true);
+    ensure();
+    oneShots[k](A.ctx.currentTime + 0.005);
+    burst(k);
+  }
+
+  const h1 = document.getElementById("name"), range = document.createRange();
+  function letterAt(x, y) {
+    const D = window.DOTS;
+    if (D) {
+      const px = x + scrollX, py = y + scrollY, bx = D.box;
+      if (px < bx.x || px > bx.x + bx.w || py < bx.y || py > bx.y + bx.h) return -1;
+      let best = null, bd = 1e9;
+      for (const p of D.pts) {
+        const d = Math.hypot(p.hx - px, p.hy - py);
+        if (d < bd) {
+          bd = d;
+          best = p;
+        }
+      }
+      return best && bd < 70 ? best.letter : -1;
+    }
+    const txt = h1.firstChild;
+    if (!txt || txt.length < 3) return -1;
+    let best = -1, bd = 1e9;
+    for (let i = 0; i < 3; i++) {
+      range.setStart(txt, i);
+      range.setEnd(txt, i + 1);
+      const r = range.getBoundingClientRect();
+      if (y < r.top || y > r.bottom) continue;
+      const d = x < r.left ? r.left - x : x > r.right ? x - r.right : 0;
+      if (d < bd) {
+        bd = d;
+        best = i;
+      }
+    }
+    return bd <= 8 ? best : -1;
+  }
+
+  const taps = new Map();
+  addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    const k = letterAt(e.clientX, e.clientY);
+    if (k < 0) return;
+    if (e.pointerType === "mouse") {
+      e.preventDefault();
+      padHit(k);
+    } else {
+      taps.set(e.pointerId, [e.clientX, e.clientY, k]);
+    }
+  });
+  addEventListener("pointerup", (e) => {
+    const tp = taps.get(e.pointerId);
+    if (!tp) return;
+    taps.delete(e.pointerId);
+    if (Math.hypot(e.clientX - tp[0], e.clientY - tp[1]) < 12) padHit(tp[2]);
+  });
+  addEventListener("pointercancel", (e) => taps.delete(e.pointerId));
+  addEventListener("keydown", (e) => {
+    if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target.closest && e.target.closest("[contenteditable], input, textarea, select")) return;
+    const key = (e.key || "").toLowerCase();
+    const k = key.length === 1 ? "rey".indexOf(key) : -1;
+    if (k < 0) return;
+    padHit(k);
   });
 })();

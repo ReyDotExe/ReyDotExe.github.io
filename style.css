@@ -260,10 +260,35 @@ a:hover {
 .namewrap {
   position: relative;
   isolation: isolate;
+  touch-action: manipulation;
 }
 
 .namewrap.fx h1 {
   color: transparent;
+}
+
+.padhint {
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--faint);
+  position: relative;
+  z-index: 1;
+}
+
+.padhint b {
+  display: inline-block;
+  font-weight: 400;
+  color: var(--dim);
+  border: 1px solid var(--line2);
+  padding: 0 6px;
+  margin: 0 2px;
+  transition: color .1s, border-color .1s;
+}
+
+.padhint b.hit {
+  color: var(--a2);
+  border-color: var(--a2);
 }
 
 .hero p {
