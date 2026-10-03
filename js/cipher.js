@@ -314,7 +314,7 @@
     const m = (h.trim().length === 7 ? h.trim() : f).replace("#", "");
     return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
   };
-  const RED = hexRgb(css.getPropertyValue("--a2"), "#cf2c40"), DEEP = hexRgb(css.getPropertyValue("--f2"), "#8f1424"), CHROME = [226, 228, 234];
+  const RED = hexRgb(css.getPropertyValue("--a2"), "#d84557"), DEEP = hexRgb(css.getPropertyValue("--f2"), "#8f1424"), CHROME = [226, 228, 234];
   const mix = (a, b, k) => a.map((v, i) => Math.round(v + (b[i] - v) * k));
   const rgba = (c, a) => "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a + ")";
   const cv = document.createElement("canvas");

@@ -1,7 +1,7 @@
 (() => {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const css = getComputedStyle(document.documentElement);
-  const RED = css.getPropertyValue("--a2").trim() || "#cf2c40";
+  const RED = css.getPropertyValue("--a2").trim() || "#d84557";
   const wrap = document.getElementById("namewrap"), h1 = document.getElementById("name");
   const cv = document.createElement("canvas");
   cv.className = "dotstage";
@@ -16,7 +16,7 @@
     const m = h.replace("#", "");
     return [parseInt(m.slice(0, 2), 16), parseInt(m.slice(2, 4), 16), parseInt(m.slice(4, 6), 16)];
   }
-  const WHITE = [236, 236, 239], REDC = hexRgb(RED.length === 7 ? RED : "#cf2c40");
+  const WHITE = [236, 236, 239], REDC = hexRgb(RED.length === 7 ? RED : "#d84557");
   const RAMP = [];
   for (let i = 0; i <= 16; i++) {
     const k = i / 16, e = k * k * (3 - 2 * k);

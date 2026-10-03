@@ -1,7 +1,7 @@
 (() => {
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
-  const RED = getComputedStyle(document.documentElement).getPropertyValue("--a2").trim() || "#cf2c40";
+  const RED = getComputedStyle(document.documentElement).getPropertyValue("--a2").trim() || "#d84557";
   const A = { ctx: null, on: false, playing: false, out: null, lp: null, mute: null, fx: null, noise: null, L: {} };
   const LAYERS = ["pad", "hat", "mel", "kick", "bass", "snare", "roll", "mel2"];
   const SECTIONS = [
