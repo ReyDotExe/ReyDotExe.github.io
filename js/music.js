@@ -187,7 +187,7 @@
   }
   function sweep(p, to, t, dur, e) {
     const now = A.ctx.currentTime;
-    const tr = tracks.get(p) || [{ t: 0, v: p.value }];
+    const tr = tracks.get(p);
     const v = valueAt(tr, t);
     const span = tr.find((q) => q.t >= t);
     const keep = tr.filter((q) => q.t < t + 0.001);
@@ -197,7 +197,7 @@
     else p.linearRampToValueAtTime(v, t);
     if (e) p.exponentialRampToValueAtTime(to, t + dur);
     else p.linearRampToValueAtTime(to, t + dur);
-    const pts = [past.length ? past[past.length - 1] : keep[0], ...keep.filter((q) => q.t > now), { t, v, e: span && span.e }, { t: t + dur, v: to, e }];
+    const pts = [past[past.length - 1], ...keep.filter((q) => q.t > now), { t, v, e: span && span.e }, { t: t + dur, v: to, e }];
     tracks.set(p, pts.sort((a, b) => a.t - b.t));
   }
 
@@ -294,7 +294,6 @@
   });
 
   function setSound(on) {
-    if (on === A.on) return;
     A.on = on;
     btn.textContent = on ? "sound: on" : "sound: off";
     btn.classList.toggle("on", on);
@@ -337,7 +336,7 @@
   function burst(k) {
     const D = window.DOTS;
     if (D) {
-      const mine = D.pts.filter((p) => p.letter === k && p.st === "home");
+      const mine = D.pts.filter((p) => p.letter === k);
       let sx = 0, sy = 0;
       mine.forEach((p) => {
         sx += p.x;
@@ -354,7 +353,7 @@
         p.flash = tt + 220;
         p.fcol = RED;
       });
-      if (mine.length) window.dispatchEvent(new Event("burst"));
+      window.dispatchEvent(new Event("burst"));
     }
     const b = caps[k];
     b.classList.add("hit");
@@ -385,7 +384,6 @@
       return best && bd < 70 ? best.letter : -1;
     }
     const txt = h1.firstChild;
-    if (!txt || txt.length < 3) return -1;
     let best = -1, bd = 1e9;
     for (let i = 0; i < 3; i++) {
       range.setStart(txt, i);

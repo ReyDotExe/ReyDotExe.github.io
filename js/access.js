@@ -149,13 +149,12 @@ const io = new IntersectionObserver((entries) => {
     if (!sc || seen.has(sc)) return;
     seen.add(sc);
     const v = el.querySelector(".verdict");
-    const ok = el.dataset.verdict === "grant";
     v.className = "verdict eval";
     v.textContent = "evaluating";
     setTimeout(() => {
-      v.className = "verdict " + (ok ? "grant" : "deny");
-      v.textContent = ok ? "granted" : "denied";
-      write("read", sc, ok);
+      v.className = "verdict grant";
+      v.textContent = "granted";
+      write("read", sc, true);
     }, reduce ? 0 : 520);
   });
 }, { threshold: 0.2 });

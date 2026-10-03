@@ -26,8 +26,6 @@
   --no: #ff5a6a;
   --a2: #d84557;
   --g1: 150, 18, 34;
-  --g2: 150, 152, 168;
-  --f1: #cf2c40;
   --f2: #8f1424;
   --bar: #151519;
   --sans: "Geist", system-ui, sans-serif;
@@ -258,8 +256,6 @@ a:hover {
 }
 
 .namewrap {
-  position: relative;
-  isolation: isolate;
   touch-action: manipulation;
 }
 
@@ -272,8 +268,6 @@ a:hover {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--faint);
-  position: relative;
-  z-index: 1;
 }
 
 .padhint b {
@@ -712,7 +706,6 @@ a:hover {
 }
 
 .fb {
-  transition: opacity .6s ease;
   overflow-anchor: none;
 }
 

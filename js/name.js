@@ -80,9 +80,9 @@
         const lx = (xi + 0.5) * step, ly = (yi + 0.5) * step;
         if (cover(lx, ly) >= 0.55) {
           next.push({
-            hx: ox + lx, hy: oy + ly, lx, ly, ry: ly / h, col: xi,
+            hx: ox + lx, hy: oy + ly, lx,
             letter: lx < pad + wR - step * 0.2 ? 0 : lx < pad + wRE - step * 0.2 ? 1 : 2,
-            vx: 0, vy: 0, flash: 0, fcol: RED, st: "home"
+            vx: 0, vy: 0, flash: 0, fcol: RED
           });
         }
       }
@@ -101,7 +101,7 @@
     });
     pts = next;
     lastSy = scrollY;
-    window.DOTS = { pts, box: nameBox, cols, step };
+    window.DOTS = { pts, box: nameBox };
   }
 
   const near = () => {
