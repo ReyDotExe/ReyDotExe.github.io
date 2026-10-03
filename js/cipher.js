@@ -49,6 +49,7 @@
   function fit() {
     const fonts = new Map(), sets = new Map();
     for (const d of data) {
+      const k = d.el.getBoundingClientRect().width / (d.el.offsetWidth || 1) || 1;
       for (const c of d.chars) {
         if (c.blank) continue;
         let f = fonts.get(c.fe);
@@ -59,7 +60,7 @@
           f = { key, ls: parseFloat(cs.letterSpacing) || 0, ws: [...SYM].map((s) => [s, probe.measureText(s).width]) };
           fonts.set(c.fe, f);
         }
-        const w = c.el.getBoundingClientRect().width;
+        const w = c.el.getBoundingClientRect().width / k;
         const id = f.key + "|" + f.ls + "|" + w.toFixed(2);
         let cand = sets.get(id);
         if (!cand) {
@@ -99,7 +100,8 @@
       }
       d.dirty = true;
     }
-    const hs = data.map((d) => [d.el.getBoundingClientRect().height - (d.det ? d.det.getBoundingClientRect().height : 0), d.inner ? d.inner.getBoundingClientRect().height : 0]);
+    const ht = (el) => parseFloat(getComputedStyle(el).height) || 0;
+    const hs = data.map((d) => [ht(d.el) - (d.det ? ht(d.det) : 0), d.inner ? ht(d.inner) : 0]);
     data.forEach((d, i) => {
       d.el.style.minHeight = hs[i][0] + "px";
       if (d.inner) d.inner.style.minHeight = hs[i][1] + "px";
