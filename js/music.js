@@ -39,7 +39,7 @@
       const d = A.noise.getChannelData(0);
       for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
     }
-    if (A.ctx.state !== "running") A.ctx.resume();
+    if (A.ctx.state !== "running") A.ctx.resume().catch(() => {});
   }
 
   function env(g, t, a, peak, dec) {
@@ -230,7 +230,7 @@
       stopTimer = 0;
       A.playing = false;
       clearInterval(timer);
-      if (!A.on) A.ctx.suspend();
+      if (!A.on) A.ctx.suspend().catch(() => {});
     }, 500);
   }
 
@@ -305,8 +305,8 @@
   btn.addEventListener("click", () => setSound(!A.on));
   document.addEventListener("visibilitychange", () => {
     if (!A.ctx) return;
-    if (document.hidden) A.ctx.suspend();
-    else if (A.on) A.ctx.resume();
+    if (document.hidden) A.ctx.suspend().catch(() => {});
+    else if (A.on) A.ctx.resume().catch(() => {});
   });
 
   function watch() {
