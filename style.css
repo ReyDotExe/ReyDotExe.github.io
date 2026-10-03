@@ -701,6 +701,16 @@ a:hover {
   color: var(--faint);
 }
 
+.lost {
+  padding: 150px 0 96px;
+  font-size: 18px;
+  color: var(--dim);
+}
+
+.lost p {
+  margin: 0 0 12px;
+}
+
 .fb {
   transition: opacity .6s ease;
   overflow-anchor: none;
@@ -766,6 +776,10 @@ a:hover {
   .bar .req .hide-s,
   .tick {
     display: none;
+  }
+
+  .lost {
+    padding: 64px 0 56px;
   }
 }
 
